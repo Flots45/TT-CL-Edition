@@ -634,7 +634,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         self.goonMovementTime = globalClock.getFrameTime()
         if side == None:
             if not self.wantOpeningModifications:
-                side = random.choice(['EmergeB', 'EmergeB'])
+                side = random.choice(['EmergeA', 'EmergeA'])
             else:
                 for t in self.involvedToons:
                     avId = t
