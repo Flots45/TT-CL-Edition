@@ -129,7 +129,10 @@ class DistributedCashbotBossSafe(DistributedCashbotBossObject.DistributedCashbot
         self.handler.addAgainPattern(self.collideName + '-%in')
         
         self.watchDriftName = self.uniqueName('watchDrift')
-        self.startCacheName = self.uniqueName('startSpeedCaching')
+
+        # In setupPhysics(), we initialize an attribute to 
+        # store the name of the velocity caching task
+        self.startVelocityCachingName = self.uniqueName('startVelocityCaching')
 
     def getMinImpact(self):
         # This method returns the minimum impact, in feet per second,
@@ -181,7 +184,6 @@ class DistributedCashbotBossSafe(DistributedCashbotBossObject.DistributedCashbot
     ### FSM States ###
     
     def enterInitial(self):
-        self.resetSpeedCaching()
         self.resetToInitialPosition()
         self.showShadows()
         

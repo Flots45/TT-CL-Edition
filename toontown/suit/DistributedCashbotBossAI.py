@@ -139,15 +139,6 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
     def craneStatesDebug(self, doId='system', content='null'):
         if self.ruleset.CRANE_STATES_DEBUG:
             self.updateActivityLog(doId, content)
-            
-    def clearObjectSpeedCaching(self):
-        if self.safes:
-            for safe in self.safes:
-                safe.d_resetSpeedCaching()
-        
-        if self.goons:
-            for goon in self.goons:
-                goon.d_resetSpeedCaching()
 
     def getInvolvedToonsNotSpectating(self):
         toons = list(self.involvedToons)
@@ -638,7 +629,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
         self.goonMovementTime = globalClock.getFrameTime()
         if side == None:
             if not self.wantOpeningModifications:
-                side = random.choice(['EmergeB', 'EmergeB'])
+                side = random.choice(['EmergeA', 'EmergeB'])
             else:
                 for t in self.involvedToons:
                     avId = t
@@ -679,11 +670,14 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             print("Elapsed Time: %s" % elapsed)
             if self.wantCraneThreePractice:
                 if elapsed > 5:
-                    goon_scale = 0.61
+                    goon_scale = 0.612
                 else:
                     goon_scale = self.progressRandomValue(self.goonMinScale, self.goonMaxScale, noRandom=self.wantMaxSizeGoons)
             else:
-                goon_scale = self.progressRandomValue(self.goonMinScale, self.goonMaxScale, noRandom=self.wantMaxSizeGoons)
+                if elapsed > 5:
+                    goon_scale = 0.612
+                else:
+                    goon_scale = self.progressRandomValue(self.goonMinScale, self.goonMaxScale, noRandom=self.wantMaxSizeGoons)
 
         print(goon_scale)
         # Apply multipliers if necessary
@@ -1060,6 +1054,7 @@ class DistributedCashbotBossAI(DistributedBossCogAI.DistributedBossCogAI, FSM.FS
             taskMgr.doMethodLater(14.5, self.stunCFO, "stunCFO")
             #taskMgr.doMethodLater(19, self.checkNearbyTwo, "checkNearbyTwo")
         else:
+            taskMgr.doMethodLater(8, self.stunAllGoons, "stompAllGoons")
             pass
 
         # Force unstun the CFO if he was stunned in a previous Battle Three round
